@@ -1,4 +1,4 @@
-package com.guilhermevilar.primeiroprojeto;
+package com.guilhermevilar.primeiroprojeto.domain;
 
 import java.io.Serializable;
 
