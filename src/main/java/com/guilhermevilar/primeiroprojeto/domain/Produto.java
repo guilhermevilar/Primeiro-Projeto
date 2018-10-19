@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity // isso quer dizer que é uma classe de domínio do JPA
 public class Produto implements Serializable{
@@ -23,6 +25,8 @@ public class Produto implements Serializable{
 	private String nome;
 	private Double preco;
 	
+	
+	@JsonBackReference //neste caso, devolve a referência da Categoria...
 	@ManyToMany //diz que existe um relacionamento muitos para muitos
 	@JoinTable(name= "PRODUTO_CATEGORIA", //define a tabela auxiliar nesse caso para associação muitos pra muitos
 			joinColumns = @JoinColumn(name = "produto_id"), //define o campo do produto na outra tabela (chave estrangeira)

@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 public class Categoria implements Serializable{
@@ -20,6 +22,8 @@ public class Categoria implements Serializable{
 	private Integer id;
 	private String nome;
 	
+	
+	@JsonManagedReference //isso para tratar a referência cíclica. Isso para a classe que você quer que traga os objetos referenciados, no caso, os produtos.
 	@ManyToMany(mappedBy="categorias") //aqui diz que já foi mapeado na outra classe, assim n precisa refazer o mapeamento aqui
 	private List<Produto> produtos = new ArrayList<>();
 	
