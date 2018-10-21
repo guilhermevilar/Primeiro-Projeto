@@ -1,5 +1,6 @@
 package com.guilhermevilar.primeiroprojeto;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.guilhermevilar.primeiroprojeto.domain.Cidade;
 import com.guilhermevilar.primeiroprojeto.domain.Cliente;
 import com.guilhermevilar.primeiroprojeto.domain.Endereco;
 import com.guilhermevilar.primeiroprojeto.domain.Estado;
+import com.guilhermevilar.primeiroprojeto.domain.Pagamento;
+import com.guilhermevilar.primeiroprojeto.domain.PagamentoComBoleto;
+import com.guilhermevilar.primeiroprojeto.domain.PagamentoComCartao;
+import com.guilhermevilar.primeiroprojeto.domain.Pedido;
 import com.guilhermevilar.primeiroprojeto.domain.Produto;
+import com.guilhermevilar.primeiroprojeto.domain.enums.EstadoPagamento;
 import com.guilhermevilar.primeiroprojeto.domain.enums.TipoCliente;
 import com.guilhermevilar.primeiroprojeto.repositories.CategoriaRepository;
 import com.guilhermevilar.primeiroprojeto.repositories.CidadeRepository;
 import com.guilhermevilar.primeiroprojeto.repositories.ClienteRepository;
 import com.guilhermevilar.primeiroprojeto.repositories.EnderecoRepository;
 import com.guilhermevilar.primeiroprojeto.repositories.EstadoRepository;
+import com.guilhermevilar.primeiroprojeto.repositories.PagamentoRepository;
+import com.guilhermevilar.primeiroprojeto.repositories.PedidoRepository;
 import com.guilhermevilar.primeiroprojeto.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -42,6 +50,12 @@ public class PrimeiroprojetoApplication implements CommandLineRunner{
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PrimeiroprojetoApplication.class, args);
@@ -51,6 +65,7 @@ public class PrimeiroprojetoApplication implements CommandLineRunner{
 
 	@Override // aqui instanciamos os objetos para a aplicação
 	public void run(String... args) throws Exception {
+		
 		
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
@@ -93,7 +108,20 @@ public class PrimeiroprojetoApplication implements CommandLineRunner{
 		
 		clienteRepository.save(Arrays.asList(cli1));
 		enderecoRepository.save(Arrays.asList(e1, e2));
-	
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("21/10/2018 15:09"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("21/10/2018 15:12"), cli1, e2);
+		
+		Pagamento pgto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pgto1);
+		
+		Pagamento pgto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("22/10/2018 11:45"), null);
+		ped2.setPagamento(pgto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.save(Arrays.asList(ped1, ped2));
+		pagamentoRepository.save(Arrays.asList(pgto1, pgto2));
 	}
 }

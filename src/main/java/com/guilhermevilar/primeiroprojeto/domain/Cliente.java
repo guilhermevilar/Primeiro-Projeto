@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.guilhermevilar.primeiroprojeto.domain.enums.TipoCliente;
 
@@ -30,6 +31,9 @@ public class Cliente implements Serializable{
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
+	
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 	
 	
 	@JsonManagedReference //protege contra serialização Json. Faz aqui pq sempre vamos buscar o cliente com o endereço e não o contrário.
@@ -112,6 +116,14 @@ public class Cliente implements Serializable{
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
+	
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
 
 	@Override
 	public int hashCode() {
@@ -137,6 +149,8 @@ public class Cliente implements Serializable{
 			return false;
 		return true;
 	}
+
+
 	
 	
 }
