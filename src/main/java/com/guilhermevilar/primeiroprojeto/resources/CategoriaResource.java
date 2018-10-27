@@ -36,7 +36,6 @@ public class CategoriaResource{
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody Categoria obj){ //RequestBody para construir o objeto através dos dados captados pelo Json
 		
-		
 		obj = service.insert(obj); //usamos obj = nesse caso porque a operação save do repository retorna um objeto.
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		 //para acrescentar no final da url o id do objeto criado
@@ -52,5 +51,12 @@ public class CategoriaResource{
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 		
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Integer id){
+		
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }

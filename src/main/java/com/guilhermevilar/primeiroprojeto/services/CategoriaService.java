@@ -1,10 +1,12 @@
 package com.guilhermevilar.primeiroprojeto.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.guilhermevilar.primeiroprojeto.domain.Categoria;
 import com.guilhermevilar.primeiroprojeto.repositories.CategoriaRepository;
+import com.guilhermevilar.primeiroprojeto.services.exceptions.DataIntegrityException;
 import com.guilhermevilar.primeiroprojeto.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -32,6 +34,18 @@ public class CategoriaService {
 	public Categoria update(Categoria obj) {
 		find(obj.getId()); // assim vemos se o objeto já existe para ser atualizado.
 		return repo.save(obj);
+	}
+	
+	public void delete(Integer id) {
+		find(id); // caso o id não exista, dispara exceção.
+		
+		try {
+			repo.delete(id);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível uma categoria que possui produtos.");
+		}
+		
 	}
 
 }
