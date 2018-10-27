@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -32,11 +31,11 @@ public class Pedido implements Serializable{
 	private Date instante;
 	
 	
-	@JsonManagedReference
+
 	@OneToOne(cascade = CascadeType.ALL, mappedBy="pedido") //isso é necessário se não dá erro de entidade transiente quando salva um pedido e o pagamento dele... peculiaridade do jpa
 	private Pagamento pagamento;
 	
-	@JsonManagedReference //proteção cíclica aqui. Permite visualizar os pedidos do cliente mas não o contrário.
+	
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
 	private Cliente cliente;
