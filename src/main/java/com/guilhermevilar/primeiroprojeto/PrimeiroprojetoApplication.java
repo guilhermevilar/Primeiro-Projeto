@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 import com.guilhermevilar.primeiroprojeto.domain.Categoria;
 import com.guilhermevilar.primeiroprojeto.domain.Cidade;
 import com.guilhermevilar.primeiroprojeto.domain.Cliente;
@@ -61,6 +62,8 @@ public class PrimeiroprojetoApplication implements CommandLineRunner{
 	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(PrimeiroprojetoApplication.class, args);
@@ -141,6 +144,9 @@ public class PrimeiroprojetoApplication implements CommandLineRunner{
 		p3.getItens().addAll(Arrays.asList(ip2));
 		
 		itemPedidoRepository.save(Arrays.asList(ip1, ip2, ip3));
+		
+		
+	
 		
 	}
 }

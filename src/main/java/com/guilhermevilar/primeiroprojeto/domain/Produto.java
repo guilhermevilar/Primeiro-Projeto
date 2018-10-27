@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity // isso quer dizer que é uma classe de domínio do JPA
@@ -37,6 +38,7 @@ public class Produto implements Serializable{
 			) 
 	private List<Categoria> categorias = new ArrayList<>();
 	
+	@JsonIgnore // ignora quais são os itens do pedido quando chamar o produto. Eu só preciso saber os produtos dentro dos itens.
 	@OneToMany(mappedBy="id.produto")
 	private Set<ItemPedido> itens = new HashSet<>();
 	
@@ -51,6 +53,8 @@ public class Produto implements Serializable{
 	
 	}
 	
+	
+	@JsonIgnore // se não ignorar, vai ser serializados os pedidos associados aos produtos
 	public List<Pedido> getPedidos(){
 		
 		List<Pedido> lista = new ArrayList<>();
