@@ -13,7 +13,7 @@ public class ClienteService {
 	@Autowired //dessa forma a dependência é auomaticamente instanciada
 	private ClienteRepository repo;
 	
-	public Cliente buscar(Integer id){
+	public Cliente find(Integer id){
 		
 		Cliente obj = repo.findOne(id);
 		if(obj == null) {

@@ -13,7 +13,7 @@ public class CategoriaService {
 	@Autowired //dessa forma a dependência é auomaticamente instanciada
 	private CategoriaRepository repo;
 	
-	public Categoria buscar(Integer id){
+	public Categoria find(Integer id){
 		
 		Categoria obj = repo.findOne(id);
 		if(obj == null) {
@@ -26,6 +26,11 @@ public class CategoriaService {
 	
 	public Categoria insert(Categoria obj) {
 		obj.setId(null); //o objeto a ser inserido tem que ter o id nulo. Se não for nulo, o método save vai considerar que é uma atualização.
+		return repo.save(obj);
+	}
+	
+	public Categoria update(Categoria obj) {
+		find(obj.getId()); // assim vemos se o objeto já existe para ser atualizado.
 		return repo.save(obj);
 	}
 

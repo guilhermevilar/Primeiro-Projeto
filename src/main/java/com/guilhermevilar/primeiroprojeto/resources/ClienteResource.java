@@ -20,10 +20,10 @@ public class ClienteResource{
 	private ClienteService service;
 
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) { //PathVariable para saber que o id do value (url) irá para o parâmetro Integer id
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) { //PathVariable para saber que o id do value (url) irá para o parâmetro Integer id
 	//Response Entity encapsula vários métodos para requisições http
 		
-		Cliente obj = service.buscar(id);
+		Cliente obj = service.find(id);
 		
 		return ResponseEntity.ok().body(obj);
 		
