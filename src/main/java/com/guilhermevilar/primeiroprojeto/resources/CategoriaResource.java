@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +41,9 @@ public class CategoriaResource{
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj){ //RequestBody para construir o objeto através dos dados captados pelo Json
-		
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto){ //RequestBody para construir o objeto através dos dados captados pelo Json
+		//valid para validar o objeto com as regras colocadas no DTO (na hora de prencheer formulário web)
+		Categoria obj = service.fromDTO(objDto);
 		obj = service.insert(obj); //usamos obj = nesse caso porque a operação save do repository retorna um objeto.
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		 //para acrescentar no final da url o id do objeto criado
@@ -50,8 +53,8 @@ public class CategoriaResource{
 	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Void> uptade(@RequestBody Categoria obj, @PathVariable Integer id){
-		
+	public ResponseEntity<Void> uptade(@Valid @RequestBody CategoriaDTO objDTO, @PathVariable Integer id){
+		Categoria obj = service.fromDTO(objDTO);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
