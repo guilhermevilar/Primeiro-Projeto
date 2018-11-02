@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.guilhermevilar.primeiroprojeto.domain.Cidade;
 import com.guilhermevilar.primeiroprojeto.domain.Cliente;
@@ -41,6 +42,7 @@ public class ClienteService {
 	}
 	
 	
+	@Transactional // assim garante que vai salvar tanto o Cliente quanto os Endereços na mesma transação do banco
 	public Cliente insert(Cliente obj) {
 		obj.setId(null); //o objeto a ser inserido tem que ter o id nulo. Se não for nulo, o método save vai considerar que é uma atualização.
 		obj = repo.save(obj);
