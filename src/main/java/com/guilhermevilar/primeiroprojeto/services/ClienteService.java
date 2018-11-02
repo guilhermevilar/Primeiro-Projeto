@@ -9,9 +9,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.guilhermevilar.primeiroprojeto.domain.Cidade;
 import com.guilhermevilar.primeiroprojeto.domain.Cliente;
+import com.guilhermevilar.primeiroprojeto.domain.Endereco;
+import com.guilhermevilar.primeiroprojeto.domain.enums.TipoCliente;
 import com.guilhermevilar.primeiroprojeto.dto.ClienteDTO;
+import com.guilhermevilar.primeiroprojeto.dto.ClienteNewDTO;
 import com.guilhermevilar.primeiroprojeto.repositories.ClienteRepository;
+import com.guilhermevilar.primeiroprojeto.repositories.EnderecoRepository;
 import com.guilhermevilar.primeiroprojeto.services.exceptions.DataIntegrityException;
 import com.guilhermevilar.primeiroprojeto.services.exceptions.ObjectNotFoundException;
 
@@ -21,6 +26,10 @@ public class ClienteService {
 	@Autowired //dessa forma a dependência é auomaticamente instanciada
 	private ClienteRepository repo;
 	
+	@Autowired 
+	private EnderecoRepository enderecoRepository;
+
+	
 	public Cliente find(Integer id){
 		
 		Cliente obj = repo.findOne(id);
@@ -28,6 +37,14 @@ public class ClienteService {
 			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName());
 		
 		}
+		return obj;
+	}
+	
+	
+	public Cliente insert(Cliente obj) {
+		obj.setId(null); //o objeto a ser inserido tem que ter o id nulo. Se não for nulo, o método save vai considerar que é uma atualização.
+		obj = repo.save(obj);
+		enderecoRepository.save(obj.getEnderecos());
 		return obj;
 	}
 	
@@ -66,6 +83,24 @@ public class ClienteService {
 	public Cliente fromDTO(ClienteDTO objDTO) {
 		
 		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null);
+	}
+	
+	public Cliente fromDTO(ClienteNewDTO objDto) { //específico para insert (post)
+		
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if (objDto.getTelefone2() != null) { //verifica se a pessoa entrou com outro telefone
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		
+		if (objDto.getTelefone3() != null) { 
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		
+		return cli;
 	}
 	
 	private void updateData(Cliente newObj, Cliente obj) {
