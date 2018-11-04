@@ -7,9 +7,11 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.guilhermevilar.primeiroprojeto.domain.Cliente;
+import com.guilhermevilar.primeiroprojeto.services.validation.ClienteUpdate;
 
 //Não deixaremos o cliente alterar cpf ou cnpj!
 
+@ClienteUpdate
 public class ClienteDTO implements Serializable{ //DTO é onde ficam os dados básicos para deletar, criar, etc...
 	private static final long serialVersionUID = 1L; 
 	
